@@ -3,6 +3,7 @@ import '../styles/LandingPage.css';
 
 function LandingPage({ onUpload, loading }) {
   const fileInputRef = useRef(null);
+  const cameraInputRef = useRef(null);
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -60,26 +61,47 @@ function LandingPage({ onUpload, loading }) {
         <div className="landing-text">
           <h2 className="landing-heading">What's in your fridge?</h2>
           <p className="landing-description">
-            Snap a photo, and we'll find recipes you can cook now.
+            Snap or upload a photo, and we'll find recipes you can cook now.
           </p>
         </div>
 
-        <div className="landing-buttons">
-          <button
-            className="button button-primary button-large"
-            onClick={handleUploadClick}
-            disabled={loading}
-          >
-            {loading ? '⏳ Processing...' : '📸 Upload fridge photo'}
-          </button>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-          />
-        </div>
+        <div className="landing-buttons" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+  {/* Option 1: Take Photo With Camera */}
+  <button
+    className="button button-primary button-large"
+    onClick={() => cameraInputRef.current?.click()}
+    disabled={loading}
+  >
+    {loading ? '⏳ Processing...' : '📸 Take fridge photo'}
+  </button>
 
+  {/* Option 2: Upload Photo from Gallery */}
+  <button
+    className="button button-secondary button-large"
+    onClick={handleUploadClick}
+    disabled={loading}
+    style={{ backgroundColor: 'white', color: '#5A8D8F', border: '2px solid #5A8D8F' }}
+  >
+    {loading ? '⏳ Processing...' : '📁 Upload from gallery'}
+  </button>
+
+  {/* Hidden Inputs */}
+  <input
+    ref={fileInputRef}
+    type="file"
+    accept="image/*"
+    onChange={handleFileChange}
+    style={{ display: 'none' }} // Added this to keep UI clean
+  />
+  <input
+    ref={cameraInputRef}
+    type="file"
+    accept="image/*"
+    capture="environment"
+    onChange={handleFileChange}
+    style={{ display: 'none' }}
+      />
+    </div>
         {/* Carousel dots */}
         <div className="carousel-dots">
           <span className="dot active"></span>
