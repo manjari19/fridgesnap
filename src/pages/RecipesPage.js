@@ -7,6 +7,9 @@ import { generateRecipes } from "../utils/geminiApi";
 
 function RecipesPage({
   ingredients = [],
+  cookingLevel = "Beginner",
+  timeAvailable = "20 min",
+  dietFocus = "Healthy",  
   onSave,
   onViewSaved,
   onBack,

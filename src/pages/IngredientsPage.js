@@ -4,6 +4,10 @@ import '../styles/IngredientsPage.css';
 function IngredientsPage({ ingredients, onConfirm, onBack }) {
   const [selectedIngredients, setSelectedIngredients] = useState(ingredients);
   const [newIngredient, setNewIngredient] = useState('');
+  const [cookingLevel, setCookingLevel] = useState('Beginner');
+  const [timeAvailable, setTimeAvailable] = useState('20 min');
+  const [dietFocus, setDietFocus] = useState('Healthy');
+
 
   useEffect(() => {
   setSelectedIngredients(ingredients || []);
@@ -56,8 +60,14 @@ const handleEditKeyDown = (e) => {
 
 
   const handleConfirm = () => {
-    onConfirm(selectedIngredients);
+    onConfirm({
+      ingredients: selectedIngredients,
+      cookingLevel,
+      timeAvailable,
+      dietFocus,
+    });
   };
+
 
   return (
     <div className="page-container ingredients-page">
@@ -135,6 +145,56 @@ const handleEditKeyDown = (e) => {
 
         <p className="adjust-text">
           Adjust anything if you need to!
+          <div className="prefs">
+              <div className="pref-row">
+                <div className="pref-label">Cooking level:</div>
+                <div className="pref-options">
+                  {['Beginner', 'Intermediate', 'Advanced'].map((level) => (
+                    <button
+                      key={level}
+                      type="button"
+                      className={`pill ${cookingLevel === level ? 'pill-active' : ''}`}
+                      onClick={() => setCookingLevel(level)}
+                    >
+                      {level}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="pref-row">
+                <div className="pref-label">Time available:</div>
+                <div className="pref-options">
+                  {['10 min', '20 min', '30 min', '45+'].map((t) => (
+                    <button
+                      key={t}
+                      type="button"
+                      className={`pill ${timeAvailable === t ? 'pill-active' : ''}`}
+                      onClick={() => setTimeAvailable(t)}
+                    >
+                      {t}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="pref-row">
+                <div className="pref-label">Diet focus:</div>
+                <div className="pref-options">
+                  {['Healthy', 'Comfort', 'High Protein', 'Vegetarian'].map((d) => (
+                    <button
+                      key={d}
+                      type="button"
+                      className={`pill ${dietFocus === d ? 'pill-active' : ''}`}
+                      onClick={() => setDietFocus(d)}
+                    >
+                      {d}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
         </p>
 
         <button
