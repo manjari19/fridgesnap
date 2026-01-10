@@ -41,6 +41,40 @@
   border: none;
   cursor: default;
 }
+/* Make chip text + icons behave nicely */
+.chip-text {
+  line-height: 1;
+}
+
+/* Edit icon button (same vibe as the X button) */
+.chip-edit {
+  background: none;
+  border: none;
+  color: var(--color-gray);
+  cursor: pointer;
+  font-size: 16px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  transition: color 0.2s ease;
+}
+
+.chip-edit:hover {
+  color: var(--color-dark);
+}
+
+/* When editing, input should look like normal chip text (not a “box”) */
+.chip-edit-input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font: inherit;
+  color: inherit;
+  padding: 0;
+  margin: 0;
+  width: 110px; /* tweak if needed */
+}
+
 
 .chip-close {
   background: none;

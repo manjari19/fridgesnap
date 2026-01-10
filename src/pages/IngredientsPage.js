@@ -1,9 +1,43 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../styles/IngredientsPage.css';
 
 function IngredientsPage({ ingredients, onConfirm, onBack }) {
   const [selectedIngredients, setSelectedIngredients] = useState(ingredients);
   const [newIngredient, setNewIngredient] = useState('');
+
+  useEffect(() => {
+  setSelectedIngredients(ingredients || []);
+}, [ingredients]);
+
+
+  //for editing existing ingredients/chips
+  const [editingIndex, setEditingIndex] = useState(null);
+  const [editValue, setEditValue] = useState('');
+
+const startEditing = (index) => {
+  setEditingIndex(index);
+  setEditValue(selectedIngredients[index]);
+};
+
+const saveEditing = () => {
+  const trimmed = editValue.trim();
+  if (!trimmed) return;
+
+  setSelectedIngredients((prev) =>
+    prev.map((x, i) => (i === editingIndex ? trimmed : x))
+  );
+
+  setEditingIndex(null);
+  setEditValue('');
+};
+
+const handleEditKeyDown = (e) => {
+  if (e.key === 'Enter') saveEditing();
+  if (e.key === 'Escape') {
+    setEditingIndex(null);
+    setEditValue('');
+  }
+};
 
   const handleRemoveIngredient = (index) => {
     setSelectedIngredients(selectedIngredients.filter((_, i) => i !== index));
@@ -16,11 +50,10 @@ function IngredientsPage({ ingredients, onConfirm, onBack }) {
     }
   };
 
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      handleAddIngredient();
-    }
+  const handleAddKeyDown = (e) => {
+  if (e.key === 'Enter') handleAddIngredient();
   };
+
 
   const handleConfirm = () => {
     onConfirm(selectedIngredients);
@@ -42,8 +75,33 @@ function IngredientsPage({ ingredients, onConfirm, onBack }) {
 
         <div className="ingredients-chips">
           {selectedIngredients.map((ingredient, index) => (
-            <div key={index} className="chip">
-              <span>{ingredient}</span>
+            <div key={`${ingredient}-${index}`} className="chip">
+              {editingIndex === index ? (
+                <input
+                  className="chip-edit-input"
+                  value={editValue}
+                  autoFocus
+                  onChange={(e) => setEditValue(e.target.value)}
+                  onKeyDown={handleEditKeyDown}
+                  onBlur={saveEditing}
+                  />
+                 ) : (
+                   <span className="chip-text">
+                     {ingredient}
+                   </span>
+              )}
+              <button
+                type="button"
+                className="chip-edit"
+                onClick={() => startEditing(index)}
+                aria-label={`Edit ${ingredient}`}
+                title="Edit"
+              >
+                ✎
+              </button>
+
+
+
               <button
                 className="chip-close"
                 onClick={() => handleRemoveIngredient(index)}
@@ -53,6 +111,7 @@ function IngredientsPage({ ingredients, onConfirm, onBack }) {
             </div>
           ))}
         </div>
+       
 
         <div className="add-ingredient-section">
           <div className="input-group">
@@ -62,7 +121,8 @@ function IngredientsPage({ ingredients, onConfirm, onBack }) {
               placeholder="Add ingredient..."
               value={newIngredient}
               onChange={(e) => setNewIngredient(e.target.value)}
-              onKeyPress={handleKeyPress}
+              onKeyDown={handleAddKeyDown}
+
             />
             <button 
               className="button-add-ingredient"
