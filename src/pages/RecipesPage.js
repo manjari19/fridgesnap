@@ -1,161 +1,239 @@
-import React, { useState, useEffect } from 'react';
-import RecipeCard from '../components/RecipeCard';
-import '../styles/RecipesPage.css';
-import { generateRecipes } from '../utils/geminiApi';
+// src/pages/RecipesPage.js
+import React, { useEffect, useMemo, useState } from "react";
+import RecipeCard from "../components/RecipeCard";
+import BottomNav from "../components/BottomNav";
+import "../styles/RecipesPage.css";
+import { generateRecipes } from "../utils/geminiApi";
 
-function RecipesPage({ ingredients, onSave, onViewSaved, onBack }) {
-  const [activeTab, setActiveTab] = useState('suggested');
+function RecipesPage({
+  ingredients = [],
+  onSave,
+  onViewSaved,
+  onBack,
+  onGoHome,
+  onGoSearch,
+  onGoAdd,
+  onGoProfile,
+}) {
+  const [activeTab, setActiveTab] = useState("suggested");
   const [savedIds, setSavedIds] = useState(new Set());
+  const [cookedIds, setCookedIds] = useState(new Set());
+  const [ratings, setRatings] = useState({}); // { [recipeId]: number }
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const getMockRecipes = () => [
+    {
+      id: 1,
+      name: "Chicken Spinach Wrap",
+      time: "20 min",
+      difficulty: "Easy",
+      uses: ["chicken", "spinach", "tortillas"],
+      optional: ["lemon", "garlic"],
+    },
+    {
+      id: 2,
+      name: "Cheesy Veggie Omelette",
+      time: "15 min",
+      difficulty: "Beginner",
+      uses: ["eggs", "cheese", "tomatoes"],
+      optional: ["onions"],
+    },
+    {
+      id: 3,
+      name: "Creamy Chicken Pasta",
+      time: "30 min",
+      difficulty: "Easy",
+      uses: ["chicken", "yogurt", "cheese"],
+      optional: ["spinach", "herbs"],
+    },
+  ];
+
   useEffect(() => {
-    const loadRecipes = async () => {
+    let cancelled = false;
+
+    async function loadRecipes() {
       setLoading(true);
       try {
-        const generatedRecipes = await generateRecipes(ingredients);
-        // Add IDs and format for display
-        const formattedRecipes = generatedRecipes.map((recipe, index) => ({
-          id: index + 1,
-          name: recipe.name,
-          time: recipe.time,
-          difficulty: recipe.difficulty,
-          image: getEmojiForRecipe(recipe.name),
-          uses: recipe.ingredients || [],
-          optional: recipe.optional || [],
-        }));
-        setRecipes(formattedRecipes);
-      } catch (error) {
-        console.error('Error loading recipes:', error);
-        setRecipes(getMockRecipes());
-      } finally {
-        setLoading(false);
-      }
-    };
+        const generated = await generateRecipes(ingredients);
 
-    if (ingredients.length > 0) {
-      loadRecipes();
+        const formatted = (generated || []).map((r, index) => ({
+          id: r?.id ?? `${index}-${r?.name || r?.title || "recipe"}`,
+          name: r?.name || r?.title || "Untitled Recipe",
+          time: r?.time || r?.cookTime || "20 min",
+          difficulty: r?.difficulty || "Easy",
+          uses: r?.ingredients || r?.uses || [],
+          optional: r?.optional || [],
+        }));
+
+        if (!cancelled) setRecipes(formatted);
+      } catch (e) {
+        if (!cancelled) setRecipes(getMockRecipes());
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
     }
+
+    if (ingredients?.length > 0) loadRecipes();
+    else {
+      setRecipes(getMockRecipes());
+      setLoading(false);
+    }
+
+    return () => {
+      cancelled = true;
+    };
   }, [ingredients]);
 
-  const getMockRecipes = () => {
-    return [
-      {
-        id: 1,
-        name: 'Chicken Spinach Wrap',
-        time: '20 min',
-        difficulty: 'Easy',
-        image: '🌯',
-        uses: ['chicken', 'spinach', 'tortillas'],
-        optional: ['lemon', 'garlic'],
-      },
-      {
-        id: 2,
-        name: 'Cheesy Veggie Omelette',
-        time: '15 min',
-        difficulty: 'Beginner',
-        image: '🍳',
-        uses: ['eggs', 'cheese', 'tomatoes'],
-        optional: ['onions'],
-      },
-      {
-        id: 3,
-        name: 'Creamy Chicken Pasta',
-        time: '30 min',
-        difficulty: 'Intermediate',
-        image: '🍝',
-        uses: ['chicken', 'yogurt', 'cheese'],
-        optional: ['spinach', 'herbs'],
-      },
-    ];
-  };
+  function toggleSave(recipe) {
+    setSavedIds((prev) => {
+      const next = new Set(prev);
+      const already = next.has(recipe.id);
 
-  const getEmojiForRecipe = (name) => {
-    const lower = name.toLowerCase();
-    if (lower.includes('salad')) return '🥗';
-    if (lower.includes('pasta')) return '🍝';
-    if (lower.includes('soup')) return '🍲';
-    if (lower.includes('rice')) return '🍚';
-    if (lower.includes('sandwich') || lower.includes('wrap')) return '🌯';
-    if (lower.includes('omelette') || lower.includes('egg')) return '🍳';
-    if (lower.includes('pizza')) return '🍕';
-    if (lower.includes('burger')) return '🍔';
-    if (lower.includes('taco')) return '🌮';
-    if (lower.includes('stir')) return '🍲';
-    return '🍽️';
-  };
+      if (already) {
+        next.delete(recipe.id);
+      } else {
+        next.add(recipe.id);
+        onSave?.(recipe); // notify parent only on first save
+      }
+      return next;
+    });
+  }
 
-  const handleSaveRecipe = (recipe) => {
-    setSavedIds(new Set([...savedIds, recipe.id]));
-    onSave(recipe);
-  };
+  function markCooked(recipeId) {
+    setCookedIds((prev) => {
+      const next = new Set(prev);
+      next.add(recipeId);
+      return next;
+    });
+  }
 
-  const isSaved = (id) => savedIds.has(id);
+  function setRecipeRating(recipeId, value) {
+    const rating = Math.max(0, Math.min(5, Number(value) || 0));
+    setRatings((prev) => ({ ...prev, [recipeId]: rating }));
+  }
+
+  // Temporary “Cook now” behavior:
+  // 1) mark cooked
+  // 2) optionally ask for rating (quick prompt for now)
+  function handleCook(recipe) {
+    markCooked(recipe.id);
+
+    // quick minimal rating UX for now (replace later with a real star UI)
+    const input = window.prompt(`You cooked "${recipe.name}". Rate it 1–5? (Cancel = skip)`);
+    if (input !== null) {
+      setRecipeRating(recipe.id, input);
+    }
+  }
+
+  const shownRecipes = useMemo(() => {
+    if (activeTab === "saved") {
+      return recipes.filter((r) => savedIds.has(r.id));
+    }
+
+    if (activeTab === "cooked") {
+      return recipes.filter((r) => cookedIds.has(r.id));
+    }
+
+    if (activeTab === "rated") {
+      return recipes.filter((r) => (ratings[r.id] || 0) > 0);
+    }
+
+    // suggested
+    return recipes;
+  }, [activeTab, recipes, savedIds, cookedIds, ratings]);
 
   return (
-    <div className="page-container recipes-page">
-      <div className="header">
-        <button className="header-back" onClick={onBack}>
+    <div className="rp-screen">
+      <header className="rp-header">
+        <button className="rp-back" onClick={onBack} type="button" aria-label="Back">
           ←
         </button>
-        <h1 className="header-title">Recipe Suggestions</h1>
+        <div className="rp-title">Recipe Suggestions</div>
+
+        {/* leave your wave as-is for now */}
+        <svg className="rp-wave" viewBox="0 0 390 90" preserveAspectRatio="none" aria-hidden="true">
+          <path
+            d="M0,55 C95,25 160,80 245,52 C315,30 350,38 390,28 L390,90 L0,90 Z"
+            fill="rgba(255,255,255,0.18)"
+          />
+        </svg>
+      </header>
+
+      <div className="rp-body">
+        <div className="rp-headline">
+          Here’s what you can <span>make</span>
+        </div>
+
+        <div className="rp-tabs">
+          <button
+            className={activeTab === "suggested" ? "rp-tab active" : "rp-tab"}
+            onClick={() => setActiveTab("suggested")}
+            type="button"
+          >
+            Suggested
+          </button>
+
+          <button
+            className={activeTab === "saved" ? "rp-tab active" : "rp-tab"}
+            onClick={() => setActiveTab("saved")}
+            type="button"
+          >
+            Saved
+          </button>
+
+          <button
+            className={activeTab === "cooked" ? "rp-tab active" : "rp-tab"}
+            onClick={() => setActiveTab("cooked")}
+            type="button"
+          >
+            Cooked
+          </button>
+
+          <button
+            className={activeTab === "rated" ? "rp-tab active" : "rp-tab"}
+            onClick={() => setActiveTab("rated")}
+            type="button"
+          >
+            Rated
+          </button>
+        </div>
+
+        <main className="rp-list">
+          {loading ? (
+            <div className="rp-state">Generating recipes…</div>
+          ) : shownRecipes.length === 0 ? (
+            <div className="rp-state">
+              {activeTab === "saved"
+                ? "No saved recipes yet."
+                : activeTab === "cooked"
+                ? "No cooked recipes yet."
+                : activeTab === "rated"
+                ? "No rated recipes yet."
+                : "No recipes found."}
+            </div>
+          ) : (
+            shownRecipes.map((recipe) => (
+              <RecipeCard
+                key={recipe.id}
+                recipe={recipe}
+                onCook={handleCook}
+                onToggleSave={toggleSave}
+                isSaved={savedIds.has(recipe.id)}
+              />
+            ))
+          )}
+        </main>
       </div>
 
-      <div className="recipes-tabs">
-        <button
-          className={`tab ${activeTab === 'suggested' ? 'active' : ''}`}
-          onClick={() => setActiveTab('suggested')}
-        >
-          Suggested
-        </button>
-        <button
-          className={`tab ${activeTab === 'saved' ? 'active' : ''}`}
-          onClick={() => setActiveTab('saved')}
-        >
-          Saved
-        </button>
-        <button
-          className={`tab ${activeTab === 'cooked' ? 'active' : ''}`}
-          onClick={() => setActiveTab('cooked')}
-        >
-          Cooked
-        </button>
-        <button
-          className={`tab ${activeTab === 'more' ? 'active' : ''}`}
-          onClick={() => setActiveTab('more')}
-        >
-          ⋮
-        </button>
-      </div>
-
-      <div className="recipes-content">
-        {loading ? (
-          <div className="loading-state">
-            <p>🔍 Generating recipes for you...</p>
-          </div>
-        ) : recipes.length === 0 ? (
-          <div className="loading-state">
-            <p>No recipes found. Try adding more ingredients!</p>
-          </div>
-        ) : (
-          recipes.map((recipe) => (
-            <RecipeCard
-              key={recipe.id}
-              recipe={recipe}
-              onSave={handleSaveRecipe}
-              isSaved={isSaved(recipe.id)}
-            />
-          ))
-        )}
-      </div>
-
-      <div className="bottom-nav">
-        <button className="nav-item">🏠</button>
-        <button className="nav-item">🔍</button>
-        <button className="nav-item nav-item-plus">➕</button>
-        <button className="nav-item" onClick={onViewSaved}>📑</button>
-        <button className="nav-item">👤</button>
-      </div>
+      <BottomNav
+        active="recipes"
+        onHome={onGoHome}
+        onSearch={onGoSearch}
+        onAdd={onGoAdd}
+        onSaved={onViewSaved}
+        onProfile={onGoProfile}
+      />
     </div>
   );
 }

@@ -68,8 +68,14 @@ function App() {
           onSave={handleSaveRecipe}
           onViewSaved={() => setCurrentPage('saved')}
           onBack={() => setCurrentPage('ingredients')}
+
+          onGoHome={() => setCurrentPage('landing')}
+          onGoSearch={() => setCurrentPage('ingredients')}
+          onGoAdd={() => setCurrentPage('landing')}
+          onGoProfile={() => alert('Profile page coming soon')}
         />
       )}
+
       {currentPage === 'saved' && (
         <SavedRecipesPage 
           recipes={savedRecipes}
