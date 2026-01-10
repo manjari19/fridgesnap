@@ -1,4 +1,5 @@
 import React, { useRef } from 'react';
+import { Camera, Upload, Loader2} from 'lucide-react';
 import '../styles/LandingPage.css';
 
 function LandingPage({ onUpload, loading }) {
@@ -20,7 +21,7 @@ function LandingPage({ onUpload, loading }) {
     <div className="page-container landing-page">
       <div className="landing-content">
         <div className="landing-header">
-          <h1 className="landing-title">🧊 FridgeSnap</h1>
+          <h1 className="landing-title">FridgeSnap</h1>
         </div>
 
         <div className="landing-illustration">
@@ -72,7 +73,11 @@ function LandingPage({ onUpload, loading }) {
     onClick={() => cameraInputRef.current?.click()}
     disabled={loading}
   >
-    {loading ? '⏳ Processing...' : '📸 Take fridge photo'}
+    {loading ? (
+              <><Loader2 className="spinner" size={20} /> Processing...</>
+            ) : (
+              <><Camera size={22} strokeWidth={2.5} /> Take fridge photo</>
+            )}
   </button>
 
   {/* Option 2: Upload Photo from Gallery */}
@@ -82,7 +87,11 @@ function LandingPage({ onUpload, loading }) {
     disabled={loading}
     style={{ backgroundColor: 'white', color: '#5A8D8F', border: '2px solid #5A8D8F' }}
   >
-    {loading ? '⏳ Processing...' : '📁 Upload from gallery'}
+   {loading ? (
+              <><Loader2 className="spinner" size={20} /> Processing...</>
+            ) : (
+              <><Upload size={22} strokeWidth={2.5} /> Upload from gallery</>
+            )}
   </button>
 
   {/* Hidden Inputs */}

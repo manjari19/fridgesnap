@@ -14,6 +14,15 @@
   --color-dark: #2C2C2C;
   --color-gray: #999999;
   --color-green: #6B8E6F;
+  --color-dark-green: #47664B;
+
+  /* UI Mapping based on the reference photo */
+  --bg-page: var(--color-beige);
+  --bg-header-wave: #f9e0b9; /* A softer version of your yellow */
+  --text-main: var(--color-dark);
+  --btn-primary: var(--color-yellow);
+  --btn-primary-text: var(--color-dark);
+  --accent-header: var(--color-teal-dark);
 }
 
 body {
