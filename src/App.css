@@ -1,0 +1,10 @@
+/* App-specific styles */
+.app-container {
+  width: 100vw;
+  min-height: 100vh;
+  background-color: var(--color-beige);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
