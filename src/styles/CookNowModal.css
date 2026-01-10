@@ -1,0 +1,134 @@
+/* src/styles/CookNowModal.css */
+
+.cn-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.35);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 14px;
+  z-index: 9999;
+}
+
+.cn-modal {
+  width: 100%;
+  max-width: 420px;
+  background: rgba(255,255,255,0.98);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+  max-height: 86vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.cn-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 14px 10px 14px;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+.cn-close {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 14px;
+  background: rgba(0,0,0,0.06);
+  cursor: pointer;
+  font-size: 18px;
+}
+
+.cn-title {
+  font-weight: 700;
+  font-size: 16px;
+  color: #222;
+}
+
+.cn-sub {
+  padding: 0 14px 12px 14px;
+  color: rgba(0,0,0,0.62);
+  font-size: 12.5px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.cn-dot {
+  opacity: 0.55;
+}
+
+.cn-body {
+  padding: 12px 14px 14px 14px;
+  overflow-y: auto;
+}
+
+.cn-state {
+  background: rgba(0,0,0,0.04);
+  border: 1px solid rgba(0,0,0,0.06);
+  border-radius: 14px;
+  padding: 14px;
+  color: rgba(0,0,0,0.75);
+}
+
+.cn-summary {
+  margin: 0 0 12px 0;
+  color: rgba(0,0,0,0.75);
+  line-height: 1.35;
+}
+
+.cn-sectionTitle {
+  margin-top: 10px;
+  margin-bottom: 8px;
+  font-weight: 700;
+  color: #222;
+  font-size: 13.5px;
+}
+
+.cn-list {
+  margin: 0;
+  padding-left: 18px;
+  color: rgba(0,0,0,0.78);
+}
+
+.cn-steps {
+  margin: 0;
+  padding-left: 18px;
+  color: rgba(0,0,0,0.82);
+}
+
+.cn-stepText {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.cn-stepMeta {
+  font-size: 12px;
+  color: rgba(0,0,0,0.65);
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.cn-tip {
+  opacity: 0.95;
+}
+
+.cn-rateRow {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.cn-rateBtn {
+  border: none;
+  background: rgba(0,0,0,0.08);
+  padding: 10px 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-weight: 600;
+}

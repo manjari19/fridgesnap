@@ -3,13 +3,14 @@ import React, { useEffect, useMemo, useState } from "react";
 import RecipeCard from "../components/RecipeCard";
 import BottomNav from "../components/BottomNav";
 import "../styles/RecipesPage.css";
-import { generateRecipes } from "../utils/geminiApi";
+import "../styles/CookNowModal.css";
+import { generateRecipes, generateCookNowRecipe } from "../utils/geminiApi";
 
 function RecipesPage({
   ingredients = [],
   cookingLevel = "Beginner",
   timeAvailable = "20 min",
-  dietFocus = "Healthy",  
+  dietFocus = "Healthy",
   onSave,
   onViewSaved,
   onBack,
@@ -21,9 +22,16 @@ function RecipesPage({
   const [activeTab, setActiveTab] = useState("suggested");
   const [savedIds, setSavedIds] = useState(new Set());
   const [cookedIds, setCookedIds] = useState(new Set());
-  const [ratings, setRatings] = useState({}); // { [recipeId]: number }
+  const [ratings, setRatings] = useState({});
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // Cook Now modal state
+  const [cookOpen, setCookOpen] = useState(false);
+  const [cookBase, setCookBase] = useState(null);
+  const [cookLoading, setCookLoading] = useState(false);
+  const [cookError, setCookError] = useState("");
+  const [cookRecipe, setCookRecipe] = useState(null);
 
   const getMockRecipes = () => [
     {
@@ -58,13 +66,18 @@ function RecipesPage({
     async function loadRecipes() {
       setLoading(true);
       try {
-        const generated = await generateRecipes(ingredients);
+        // IMPORTANT: pass preferences to Gemini so suggestions match chosen difficulty/time
+        const generated = await generateRecipes(ingredients, {
+          cookingLevel,
+          timeAvailable,
+          dietFocus,
+        });
 
         const formatted = (generated || []).map((r, index) => ({
           id: r?.id ?? `${index}-${r?.name || r?.title || "recipe"}`,
           name: r?.name || r?.title || "Untitled Recipe",
-          time: r?.time || r?.cookTime || "20 min",
-          difficulty: r?.difficulty || "Easy",
+          time: r?.time || r?.cookTime || timeAvailable || "20 min",
+          difficulty: r?.difficulty || cookingLevel || "Easy",
           uses: r?.ingredients || r?.uses || [],
           optional: r?.optional || [],
         }));
@@ -86,7 +99,7 @@ function RecipesPage({
     return () => {
       cancelled = true;
     };
-  }, [ingredients]);
+  }, [ingredients, cookingLevel, timeAvailable, dietFocus]);
 
   function toggleSave(recipe) {
     setSavedIds((prev) => {
@@ -97,7 +110,7 @@ function RecipesPage({
         next.delete(recipe.id);
       } else {
         next.add(recipe.id);
-        onSave?.(recipe); // notify parent only on first save
+        onSave?.(recipe);
       }
       return next;
     });
@@ -116,33 +129,44 @@ function RecipesPage({
     setRatings((prev) => ({ ...prev, [recipeId]: rating }));
   }
 
-  // Temporary “Cook now” behavior:
-  // 1) mark cooked
-  // 2) optionally ask for rating (quick prompt for now)
-  function handleCook(recipe) {
+  async function handleCook(recipe) {
     markCooked(recipe.id);
 
-    // quick minimal rating UX for now (replace later with a real star UI)
-    const input = window.prompt(`You cooked "${recipe.name}". Rate it 1–5? (Cancel = skip)`);
-    if (input !== null) {
-      setRecipeRating(recipe.id, input);
+    setCookOpen(true);
+    setCookBase(recipe);
+    setCookRecipe(null);
+    setCookError("");
+    setCookLoading(true);
+
+    try {
+      // Gemini generates a full, proper recipe based on cookingLevel + timeAvailable (+ dietFocus)
+      const full = await generateCookNowRecipe(
+        {
+          name: recipe.name,
+          uses: recipe.uses,
+          optional: recipe.optional,
+        },
+        {
+          cookingLevel,
+          timeAvailable,
+          dietFocus,
+          pantry: ingredients,
+        }
+      );
+
+      setCookRecipe(full);
+    } catch (e) {
+      console.error(e);
+      setCookError("Could not generate cooking steps right now. Please try again.");
+    } finally {
+      setCookLoading(false);
     }
   }
 
   const shownRecipes = useMemo(() => {
-    if (activeTab === "saved") {
-      return recipes.filter((r) => savedIds.has(r.id));
-    }
-
-    if (activeTab === "cooked") {
-      return recipes.filter((r) => cookedIds.has(r.id));
-    }
-
-    if (activeTab === "rated") {
-      return recipes.filter((r) => (ratings[r.id] || 0) > 0);
-    }
-
-    // suggested
+    if (activeTab === "saved") return recipes.filter((r) => savedIds.has(r.id));
+    if (activeTab === "cooked") return recipes.filter((r) => cookedIds.has(r.id));
+    if (activeTab === "rated") return recipes.filter((r) => (ratings[r.id] || 0) > 0);
     return recipes;
   }, [activeTab, recipes, savedIds, cookedIds, ratings]);
 
@@ -154,7 +178,6 @@ function RecipesPage({
         </button>
         <div className="rp-title">Recipe Suggestions</div>
 
-        {/* leave your wave as-is for now */}
         <svg className="rp-wave" viewBox="0 0 390 90" preserveAspectRatio="none" aria-hidden="true">
           <path
             d="M0,55 C95,25 160,80 245,52 C315,30 350,38 390,28 L390,90 L0,90 Z"
@@ -237,6 +260,96 @@ function RecipesPage({
         onSaved={onViewSaved}
         onProfile={onGoProfile}
       />
+
+      {/* Cook Now Modal */}
+      {cookOpen && (
+        <div className="cn-overlay" role="dialog" aria-modal="true">
+          <div className="cn-modal">
+            <div className="cn-header">
+              <button
+                type="button"
+                className="cn-close"
+                onClick={() => {
+                  setCookOpen(false);
+                  setCookBase(null);
+                  setCookRecipe(null);
+                  setCookError("");
+                  setCookLoading(false);
+                }}
+                aria-label="Close"
+              >
+                ←
+              </button>
+              <div className="cn-title">{cookBase?.name || "Cook now"}</div>
+            </div>
+
+            <div className="cn-sub">
+              <span>{timeAvailable}</span>
+              <span className="cn-dot">•</span>
+              <span>{cookingLevel}</span>
+              <span className="cn-dot">•</span>
+              <span>{dietFocus}</span>
+            </div>
+
+            <div className="cn-body">
+              {cookLoading ? (
+                <div className="cn-state">Creating your step-by-step recipe…</div>
+              ) : cookError ? (
+                <div className="cn-state">{cookError}</div>
+              ) : cookRecipe ? (
+                <>
+                  {cookRecipe.summary && <p className="cn-summary">{cookRecipe.summary}</p>}
+
+                  {Array.isArray(cookRecipe.ingredients) && cookRecipe.ingredients.length > 0 && (
+                    <>
+                      <div className="cn-sectionTitle">Ingredients</div>
+                      <ul className="cn-list">
+                        {cookRecipe.ingredients.map((it, i) => (
+                          <li key={i}>{it}</li>
+                        ))}
+                      </ul>
+                    </>
+                  )}
+
+                  {Array.isArray(cookRecipe.steps) && cookRecipe.steps.length > 0 && (
+                    <>
+                      <div className="cn-sectionTitle">Steps</div>
+                      <ol className="cn-steps">
+                        {cookRecipe.steps.map((s, i) => (
+                          <li key={i}>
+                            <div className="cn-stepText">{s.step}</div>
+                            {(s.minutes || s.tip) && (
+                              <div className="cn-stepMeta">
+                                {s.minutes ? <span>{s.minutes} min</span> : null}
+                                {s.tip ? <span className="cn-tip">Tip: {s.tip}</span> : null}
+                              </div>
+                            )}
+                          </li>
+                        ))}
+                      </ol>
+                    </>
+                  )}
+
+                  <div className="cn-rateRow">
+                    <button
+                      type="button"
+                      className="cn-rateBtn"
+                      onClick={() => {
+                        const input = window.prompt(`Rate "${cookBase?.name}" 1–5? (Cancel = skip)`);
+                        if (input !== null && cookBase?.id) setRecipeRating(cookBase.id, input);
+                      }}
+                    >
+                      Rate this
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div className="cn-state">No recipe details.</div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
