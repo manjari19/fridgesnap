@@ -289,9 +289,7 @@ function RecipesPage({
       <BottomNav
         active="recipes"
         onHome={onGoHome}
-        onSearch={onGoSearch}
         onAdd={onGoAdd}
-        onSaved={onViewSaved}
         onProfile={onGoProfile}
       />
 
