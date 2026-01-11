@@ -1,5 +1,6 @@
 .ingredients-page {
   flex-direction: column;
+  overflow-x: hidden;
 }
 
 .ingredients-content {
@@ -60,10 +61,12 @@
 }
 .pref-options {
   display: flex;
+  flex-wrap: wrap;        /* Allows buttons to drop to a new line */
+  justify-content: center; /* This is the key: centers the buttons on every line */
   gap: 10px;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  flex: 1;
+  width: 100%;
+  max-width: 400px;       /* Keeps the group from spreading too wide on desktop */
+  margin: 0 auto;         /* Centers the container itself */
 }
 
 .pill {
