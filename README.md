@@ -1,70 +1,61 @@
-# Getting Started with Create React App
+About the Project
+Inspiration
+The idea for FridgeSnap came from a simple, everyday problem we all face:
+standing in front of an open fridge and still not knowing what to cook.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Most recipe apps start by asking “What do you want to eat?” — but the harder question is often “What can I make with what I already have?”
+We wanted to flip that flow. Instead of starting with recipes, we start with the fridge.
 
-## Available Scripts
+We were inspired by how often food goes to waste, how much time is lost deciding what to cook, and how intimidating cooking can feel when you’re short on time or confidence. FridgeSnap is designed to reduce that friction and help people cook right now, using what they already have.
 
-In the project directory, you can run:
+What We Built
+FridgeSnap is a web app that:
 
-### `npm start`
+Lets users upload a photo of their fridge
+Detects ingredients from the image (with an option to edit or add missing items)
+Personalizes recipe suggestions based on:
+Cooking proficiency
+Time available
+Time of day / meal type
+Displays simple, achievable recipes that prioritize existing ingredients
+Allows users to save, rate, and revisit recipes
+The focus was not on building a massive recipe database, but on creating a smooth, friendly flow that feels approachable and intuitive.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Challenges We Faced
+One of the biggest challenges was scope control.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+It was tempting to add:
 
-### `npm test`
+nutrition tracking
+grocery integrations
+meal planning
+user accounts
+But with a limited timeframe, we learned that a focused, polished experience is more valuable than many half-finished features.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Another challenge was designing around uncertainty:
 
-### `npm run build`
+A fridge photo may miss items
+Quantities are unknown
+Preferences vary widely
+We addressed this by:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Adding an ingredient confirmation step
+Keeping calorie information out of the core MVP
+Clearly showing which ingredients are used vs optional
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+What We Learned
+This project reinforced a few key lessons:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Great products often come from reframing the starting point, not adding complexity
+Designing for imperfection (e.g. imperfect image detection) builds trust
+Warm, human-centered design matters just as much as technical features
+In a short hackathon, clarity beats completeness
 
-### `npm run eject`
+What’s Next
+With more time, we’d love to:
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Integrate real vision and recipe APIs
+Learn from user ratings to improve recommendations
+Add dietary preferences and nutrition estimates
+Expand support for leftovers and partial ingredients
+For now, FridgeSnap demonstrates how a small shift in perspective — starting from what you already have — can make cooking easier, faster, and more enjoyable.
