@@ -219,9 +219,12 @@ function RecipesPage({
       </header>
 
       <div className="rp-body">
-        <div className="rp-headline">
-          Here’s what you can <span>make</span>
-        </div>
+        {activeTab === "suggested" && (
+      <div className="rp-headline">
+        Here’s what you can <span>make</span>
+      </div>
+         )}
+
 
         <div className="rp-tabs">
           <button
