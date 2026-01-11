@@ -9,6 +9,13 @@ import omeletteImg from "../assets/omelette.png";
 import sandwichImg from "../assets/sandwich.png";
 import riceImg from "../assets/rice.png";
 import dessertImg from "../assets/dessert.png";
+import chickenImg from "../assets/chicken.png";
+import fishImg from "../assets/fish.png";
+import steakImg from "../assets/steak.png";
+import drinkImg from "../assets/drink.png";
+import stirfryImg from "../assets/stirfry.png";
+import bowlImg from "../assets/bowl.png";
+
 
 /**
  * Category keyword map: recipe name/title → category
@@ -22,6 +29,14 @@ const CATEGORY_KEYWORDS = {
   sandwich: ["sandwich", "sub", "burger", "slider", "panini", "toast"],
   rice: ["rice", "biryani", "fried rice", "risotto", "pilaf"],
   dessert: ["cake", "cookie", "brownie", "dessert", "pudding", "ice cream"],
+
+  chicken: ["chicken", "tikka", "wings", "drumstick", "tandoori"],
+  fish: ["fish", "salmon", "tuna", "cod", "tilapia", "shrimp"],
+  steak: ["steak", "beef", "sirloin", "ribeye", "filet", "flank"],
+  drink: ["drink", "smoothie", "shake", "juice", "latte", "coffee", "tea"],
+  stirfry: ["stir fry", "stir-fry", "saute", "sauté", "wok"],
+  bowl: ["bowl", "poke", "buddha", "protein bowl", "rice bowl"],
+
 };
 
 /**
@@ -36,6 +51,14 @@ const CATEGORY_IMAGE = {
   sandwich: sandwichImg,
   rice: riceImg,
   dessert: dessertImg,
+
+  chicken: chickenImg,
+  fish: fishImg,
+  steak: steakImg,
+  drink: drinkImg,
+  stirfry: stirfryImg,
+  bowl: bowlImg,
+
   default: defaultImg,
 };
 
