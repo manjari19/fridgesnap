@@ -129,11 +129,15 @@ function App() {
 
       {currentPage === "profile" && (
         <ProfilePage
-          name={userFullName}
+          fullName="Samantha Smith"
           cookedCount={cookedCount}
-          savedCount={wishlistCount}
+          wishlistCount={wishlistCount}
           onBack={() => setCurrentPage("recipes")}
+          onGoHome={() => setCurrentPage("landing")}
+          onGoAdd={() => setCurrentPage("landing")}
+          onGoProfile={() => setCurrentPage("profile")}
         />
+
       )}
     </div>
   );

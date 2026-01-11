@@ -1,5 +1,7 @@
+// src/pages/ProfilePage.js
 import React from "react";
 import "../styles/ProfilePage.css";
+import BottomNav from "../components/BottomNav";
 import profileImg from "../assets/profile.png";
 
 export default function ProfilePage({
@@ -7,29 +9,22 @@ export default function ProfilePage({
   cookedCount = 0,
   wishlistCount = 0,
   onBack,
+
+  // Bottom nav handlers
+  onGoHome,
+  onGoAdd,
+  onGoProfile,
 }) {
   return (
     <div className="pp-screen">
       <header className="pp-header">
-        <div className="pp-header-inner">
-          <button
-            className="pp-back"
-            onClick={onBack}
-            type="button"
-            aria-label="Back"
-          >
-            ←
-          </button>
+        <button className="pp-back" onClick={onBack} type="button" aria-label="Back">
+          ←
+        </button>
 
-          <div className="pp-title">Profile</div>
-          <div className="pp-right-spacer" />
-        </div>
+        <div className="pp-title">Profile</div>
 
-        <svg
-          className="pp-wave"
-          viewBox="0 0 390 90"
-          preserveAspectRatio="none"
-        >
+        <svg className="pp-wave" viewBox="0 0 390 90" preserveAspectRatio="none" aria-hidden="true">
           <path
             d="M0,55 C95,25 160,80 245,52 C315,30 350,38 390,28 L390,90 L0,90 Z"
             fill="rgba(255,255,255,0.18)"
@@ -58,6 +53,8 @@ export default function ProfilePage({
           </div>
         </div>
       </main>
+
+      <BottomNav active="profile" onHome={onGoHome} onAdd={onGoAdd} onProfile={onGoProfile} />
     </div>
   );
 }
