@@ -23,9 +23,9 @@ function geminiHeaders() {
 }
 
 function geminiUrl(pathSuffix = "") {
-  const keyQuery = GEMINI_API_KEY ? `?key=${encodeURIComponent(GEMINI_API_KEY)}` : "";
-  return `${GEMINI_BASE_URL}${pathSuffix}${keyQuery}`;
+  return `${GEMINI_BASE_URL}${pathSuffix}`;
 }
+
 
 /**
  * Detect ingredients from an image using Gemini Vision
@@ -84,7 +84,7 @@ export async function detectIngredientsFromImage(imageFile) {
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
       console.error("API Error Response:", errorData);
-      throw new Error(`API request failed: ${response.statusText}`);
+      throw new Error(`API request failed: ${response.status} ${response.statusText}`);
     }
 
     const data = await response.json();

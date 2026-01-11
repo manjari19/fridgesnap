@@ -1,5 +1,5 @@
 // src/pages/RecipesPage.js
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import RecipeCard from "../components/RecipeCard";
 import BottomNav from "../components/BottomNav";
 import "../styles/RecipesPage.css";
@@ -32,6 +32,8 @@ function RecipesPage({
   const [cookLoading, setCookLoading] = useState(false);
   const [cookError, setCookError] = useState("");
   const [cookRecipe, setCookRecipe] = useState(null);
+  const lastSigRef = useRef("");
+
 
   const getMockRecipes = () => [
     {
@@ -63,10 +65,21 @@ function RecipesPage({
   useEffect(() => {
     let cancelled = false;
 
+    // Create a stable signature so the same inputs don't call Gemini repeatedly
+    const sig = JSON.stringify({
+      ingredients: (ingredients || []).slice().sort(),
+      cookingLevel,
+      timeAvailable,
+      dietFocus,
+    });
+
+    // If we've already loaded for this exact signature, do nothing
+    if (lastSigRef.current === sig) return;
+    lastSigRef.current = sig;
+
     async function loadRecipes() {
       setLoading(true);
       try {
-        // IMPORTANT: pass preferences to Gemini so suggestions match chosen difficulty/time
         const generated = await generateRecipes(ingredients, {
           cookingLevel,
           timeAvailable,
@@ -100,6 +113,7 @@ function RecipesPage({
       cancelled = true;
     };
   }, [ingredients, cookingLevel, timeAvailable, dietFocus]);
+
 
   function toggleSave(recipe) {
     setSavedIds((prev) => {

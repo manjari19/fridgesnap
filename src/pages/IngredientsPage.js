@@ -144,7 +144,7 @@ const handleEditKeyDown = (e) => {
         </div>
 
         <p className="adjust-text">
-          Adjust anything if you need to!
+          <p>Adjust anything if you need to!</p>
           <div className="prefs">
               <div className="pref-row">
                 <div className="pref-label">Cooking level:</div>
