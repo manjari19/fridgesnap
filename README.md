@@ -1,70 +1,108 @@
-# Getting Started with Create React App
+<p align="center">
+  <img src="./src/assets/favicon.PNG" alt="FridgeSnap Logo" width="180" />
+</p>
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+<h1 align="center">FridgeSnap</h1>
 
-## Available Scripts
+> **Turn what’s in your fridge into something you can cook — instantly.**
 
-In the project directory, you can run:
+FridgeSnap is a web app that helps people decide what to cook by starting with what they *already have*, not what they’re craving. Upload a photo of your fridge, confirm the ingredients, and get simple, achievable recipe ideas tailored to your time and cooking confidence.
 
-### `npm start`
+🔗 Live Demo: https://fridgesnapjh.netlify.app/
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+---
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🌟 Inspiration
 
-### `npm test`
+The idea for **FridgeSnap** came from a simple, everyday problem:
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+> Standing in front of an open fridge and still not knowing what to cook.
 
-### `npm run build`
+Most recipe apps ask *“What do you want to eat?”* — but the harder (and more realistic) question is often:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+> **“What can I make with what I already have?”**
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+We wanted to flip the flow. Instead of starting with recipes, we start with the fridge.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+FridgeSnap was inspired by:
 
-### `npm run eject`
+* How often food goes to waste
+* How much time is lost deciding what to cook
+* How intimidating cooking can feel when time, energy, or confidence is low
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Our goal was to reduce friction and help people cook **right now**, using what’s already in front of them.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## 🛠️ What We Built
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+FridgeSnap is a web app that:
 
-## Learn More
+* 📸 Lets users upload a photo of their fridge
+* 🥕 Detects ingredients from the image (with an option to edit or add missing items)
+* 🎯 Personalizes recipe suggestions based on:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+  * Cooking proficiency
+  * Time available
+  * Time of day / meal type
+* 🍳 Displays simple, achievable recipes that prioritize existing ingredients
+* ⭐ Allows users to save, rate, and revisit recipes
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Rather than building a massive recipe database, we focused on creating a **smooth, friendly flow** that feels approachable and intuitive.
 
-### Code Splitting
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## ⚠️ Challenges We Faced
 
-### Analyzing the Bundle Size
+### 1. Scope Control
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+It was tempting to add:
 
-### Making a Progressive Web App
+* Nutrition tracking
+* Grocery store integrations
+* Meal planning
+* User accounts
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+With a limited timeframe, we learned that a **focused, polished experience** is far more valuable than many half-finished features.
 
-### Advanced Configuration
+### 2. Designing Around Uncertainty
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+Fridge photos are imperfect:
 
-### Deployment
+* Some items may be hidden
+* Quantities are unknown
+* Preferences vary widely
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+We addressed this by:
 
-### `npm run build` fails to minify
+* Adding an ingredient confirmation step
+* Keeping calorie and nutrition data out of the MVP
+* Clearly showing which ingredients are **required** vs **optional**
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+---
+
+## 📚 What We Learned
+
+This project reinforced several key lessons:
+
+* Great products often come from **reframing the starting point**, not adding complexity
+* Designing for imperfection (e.g. imperfect image detection) builds user trust
+* Warm, human-centered design matters just as much as technical features
+* In a short hackathon, **clarity beats completeness**
+
+---
+
+## 🚀 What’s Next
+
+With more time, we’d love to:
+
+* Integrate real computer vision and recipe APIs
+* Learn from user ratings to improve recommendations
+* Add dietary preferences and nutrition estimates
+* Expand support for leftovers and partial meals
+
+---
+
+
+
+**FridgeSnap** is about making cooking feel easier, friendlier, and less wasteful — one fridge photo at a time.
