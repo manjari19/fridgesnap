@@ -142,7 +142,7 @@ const handleEditKeyDown = (e) => {
             </button>
           </div>
         </div>
-
+      <div className='adjust-section'>
         <p className="adjust-text">
           <p>Adjust anything if you need to!</p>
           <div className="prefs">
@@ -196,7 +196,7 @@ const handleEditKeyDown = (e) => {
             </div>
 
         </p>
-
+      </div>
         <button
           className="button button-primary button-large confirm-button"
           onClick={handleConfirm}
