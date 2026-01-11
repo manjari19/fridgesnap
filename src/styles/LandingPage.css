@@ -40,12 +40,13 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 60px 24px 180px; /* Padding-top clears the top wave, padding-bottom clears bottom wave */
+  padding: 40px 24px 180px; /* Padding-top clears the top wave, padding-bottom clears bottom wave */
   max-width: 420px;
   margin: 0 auto;
 }
 
 .landing-title {
+  align-items: center;
   font-size: 35px;
   font-weight: 800;
   color: var(--color-dark-green);
@@ -53,11 +54,28 @@
   letter-spacing: -0.5px;
 }
 
+.logo-img {
+  height: 1.5em;
+  width: auto;
+  transform: translateY(14px);
+  object-fit: contain;
+}
+
 .landing-illustration {
   width: 100%;
-  max-width: 260px;
-  margin-bottom: 30px;
-  filter: drop-shadow(0 10px 15px rgba(0,0,0,0.08));
+  max-width: 400px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  padding: 20px 0;
+}
+
+.main-illustration {
+  width: 100%;
+  height: auto;
+  border-radius: 24px; /* Softens the corners to match your UI */
+  /* Optional: adds a soft shadow to make it pop against the background */
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); 
 }
 
 .landing-heading {
