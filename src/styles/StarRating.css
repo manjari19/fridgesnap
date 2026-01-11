@@ -1,0 +1,63 @@
+/* src/styles/StarRating.css */
+
+.sr-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sr-stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.08);
+}
+
+.sr-star {
+  appearance: none;
+  border: none;
+  background: transparent;
+  padding: 4px;
+  border-radius: 10px;
+  cursor: pointer;
+  line-height: 0;
+  transition: transform 0.12s ease, background 0.12s ease;
+}
+
+.sr-star:hover {
+  transform: translateY(-1px);
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.sr-star:active {
+  transform: translateY(0px) scale(0.98);
+}
+
+.sr-star svg path {
+  fill: rgba(0, 0, 0, 0.22);
+  transition: fill 0.12s ease;
+}
+
+.sr-star.filled svg path {
+  fill: #ffbf1a;
+}
+
+.is-readonly .sr-star {
+  cursor: default;
+}
+
+.is-readonly .sr-star:hover {
+  transform: none;
+  background: transparent;
+}
+
+.sr-value {
+  font-weight: 700;
+  font-size: 14px;
+  opacity: 0.85;
+}

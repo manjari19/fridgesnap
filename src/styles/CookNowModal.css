@@ -132,3 +132,23 @@
   cursor: pointer;
   font-weight: 600;
 }
+
+.cn-rateRow {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.cn-rateLabel {
+  font-weight: 700;
+  font-size: 14px;
+  opacity: 0.85;
+}
+
+.cn-rateHint {
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0.65;
+}

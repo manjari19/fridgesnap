@@ -162,3 +162,16 @@
 .rc-like.saved .rc-likeIcon {
   fill: #4f7f65;
 }
+
+.rc-ratingRow {
+  margin-top: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.rc-ratingText {
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0.65;
+}

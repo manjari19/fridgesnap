@@ -5,6 +5,8 @@ import BottomNav from "../components/BottomNav";
 import "../styles/RecipesPage.css";
 import "../styles/CookNowModal.css";
 import { generateRecipes, generateCookNowRecipe } from "../utils/geminiApi";
+import StarRating from "../components/StarRating";
+
 
 function RecipesPage({
   ingredients = [],
@@ -33,6 +35,22 @@ function RecipesPage({
   const [cookError, setCookError] = useState("");
   const [cookRecipe, setCookRecipe] = useState(null);
   const lastSigRef = useRef("");
+  const RATINGS_KEY = "fridgesnap:ratings:v1";
+
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem(RATINGS_KEY) || "{}");
+      if (saved && typeof saved === "object") setRatings(saved);
+    } catch {}
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem(RATINGS_KEY, JSON.stringify(ratings || {}));
+    } catch {}
+  }, [ratings]);
+
 
 
   const getMockRecipes = () => [
@@ -254,14 +272,16 @@ function RecipesPage({
             </div>
           ) : (
             shownRecipes.map((recipe) => (
-              <RecipeCard
-                key={recipe.id}
-                recipe={recipe}
-                onCook={handleCook}
-                onToggleSave={toggleSave}
-                isSaved={savedIds.has(recipe.id)}
-              />
-            ))
+            <RecipeCard
+              key={recipe.id}
+              recipe={recipe}
+              onCook={handleCook}
+              onToggleSave={toggleSave}
+              isSaved={savedIds.has(recipe.id)}
+              rating={ratings[recipe.id] || 0}
+            />
+          ))
+
           )}
         </main>
       </div>
@@ -345,17 +365,22 @@ function RecipesPage({
                   )}
 
                   <div className="cn-rateRow">
-                    <button
-                      type="button"
-                      className="cn-rateBtn"
-                      onClick={() => {
-                        const input = window.prompt(`Rate "${cookBase?.name}" 1–5? (Cancel = skip)`);
-                        if (input !== null && cookBase?.id) setRecipeRating(cookBase.id, input);
+                    <div className="cn-rateLabel">Rate this recipe</div>
+
+                    <StarRating
+                      value={cookBase?.id ? ratings[cookBase.id] || 0 : 0}
+                      onChange={(n) => {
+                        if (!cookBase?.id) return;
+                        setRecipeRating(cookBase.id, n);
                       }}
-                    >
-                      Rate this
-                    </button>
+                      size="lg"
+                    />
+
+                    {cookBase?.id && (ratings[cookBase.id] || 0) > 0 && (
+                      <div className="cn-rateHint">Saved</div>
+                    )}
                   </div>
+
                 </>
               ) : (
                 <div className="cn-state">No recipe details.</div>

@@ -3,6 +3,7 @@ import React from "react";
 import "../styles/RecipeCard.css";
 import { getRecipeImage } from "../utils/recipeImages";
 import { Heart } from "lucide-react";
+import StarRating from "./StarRating";
 
 function toArray(v) {
   if (Array.isArray(v)) return v.filter(Boolean);
@@ -10,12 +11,20 @@ function toArray(v) {
   return [];
 }
 
-export default function RecipeCard({ recipe, isSaved = false, onToggleSave, onCook }) {
+export default function RecipeCard({
+  recipe,
+  isSaved = false,
+  onToggleSave,
+  onCook,
+  rating = 0, // NEW
+}) {
   const title = recipe?.name || "Untitled Recipe";
   const time = recipe?.time || "—";
   const difficulty = recipe?.difficulty || "—";
   const uses = toArray(recipe?.uses || recipe?.ingredients);
   const optional = toArray(recipe?.optional);
+
+  const safeRating = Math.max(0, Math.min(5, Number(rating) || 0));
 
   return (
     <div className="rc-card">
@@ -29,6 +38,14 @@ export default function RecipeCard({ recipe, isSaved = false, onToggleSave, onCo
           <span className="rc-dot">•</span>
           <span>{difficulty}</span>
         </div>
+
+        {/* NEW: show rating on the card */}
+        {safeRating > 0 && (
+          <div className="rc-ratingRow" aria-label={`Rated ${safeRating} out of 5`}>
+            <StarRating value={safeRating} readonly size="sm" />
+            <span className="rc-ratingText">{safeRating}/5</span>
+          </div>
+        )}
 
         <div className="rc-lines">
           <div className="rc-line">
